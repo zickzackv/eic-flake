@@ -21,6 +21,7 @@
           ec2-instance-connect-config = {selfPackages}: {
             config,
             pkgs,
+            ...
           }: {
             users.groups.ec2-instance-connect = {};
             users.users.ec2-instance-connect = {
