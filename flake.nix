@@ -49,7 +49,7 @@
                   "curve25519-sha256@libssh.org"
                   "diffie-hellman-group-exchange-sha256"
                 ]
-                ++ ["ecdh-ssh2-nistp512"];
+                ++ ["ecdh-sha2-nistp521"];
               authorizedKeysCommandUser = "ec2-instance-connect";
               authorizedKeysCommand = "/etc/ssh/aws-ec2-instance-connect %u %f";
             };
