@@ -22,7 +22,7 @@
             config,
             pkgs,
           }: {
-            users.groups.ec2-instance-connect = { };
+            users.groups.ec2-instance-connect = {};
             users.users.ec2-instance-connect = {
               isSystemUser = true;
               group = "ec2-instance-connect";
@@ -34,18 +34,22 @@
               mode = "0755";
               text = ''
                 #!/bin/sh
-                exec ${selfPackages.ec2-instance-connect}/bin/eic_run_authorized_keys "$@"
+                exec ${selfPackages.ec2-instance-connect-run}/bin/eic_run_authorized_keys "$@"
               '';
             };
 
             services.openssh = {
               # AWS Instance Connect SSH offers the following kex algorithms
               # ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,ext-info-c,kex-strict-c-v00@openssh.com
-              settings.KexAlgorithms = [
-                "curve25519-sha256@libssh.org"
-                "diffie-hellman-group-exchange-sha256"
-                "ecdh-sha2-nistp521"
-              ];
+              settings.KexAlgorithms =
+                # TODO: replace with nixos default options value
+                [
+                  "sntrup761x25519-sha512@openssh.com"
+                  "curve25519-sha256"
+                  "curve25519-sha256@libssh.org"
+                  "diffie-hellman-group-exchange-sha256"
+                ]
+                ++ ["ecdh-ssh2-nistp512"];
               authorizedKeysCommandUser = "ec2-instance-connect";
               authorizedKeysCommand = "/etc/ssh/aws-ec2-instance-connect %u %f";
             };
